@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:minha_agenda/services/theme_services.dart';
+import 'package:minha_agenda/ui/theme.dart';
+import 'package:minha_agenda/ui/widgets/button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,13 +18,35 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: _appBar(),
       body: Column(
-        children: const [
-          Text(
-            'Theme Data',
-            style: TextStyle(
-              fontSize: 30,
+        children: [_addTaskBar()],
+      ),
+    );
+  }
+
+  _addTaskBar() {
+    return Container(
+      margin: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  DateFormat.yMMMMd().format(
+                    DateTime.now(),
+                  ),
+                  style: subHeadingStyle,
+                ),
+                Text(
+                  'Hoje',
+                  style: headingStyle,
+                ),
+              ],
             ),
           ),
+          MyButton(label: '+ Add Task', onTap: () => null)
         ],
       ),
     );
@@ -28,20 +54,19 @@ class _HomePageState extends State<HomePage> {
 
   _appBar() {
     return AppBar(
+        elevation: 0,
+        backgroundColor: context.theme.backgroundColor,
         leading: GestureDetector(
           onTap: () {
             ThemeService().switchTheme();
           },
-          child: const Icon(
-            Icons.nightlight_round,
+          child: Icon(
+            Get.isDarkMode ? Icons.wb_sunny_outlined : Icons.nightlight_round,
             size: 25,
           ),
         ),
         actions: const [
-          Icon(
-            Icons.person,
-            size: 25,
-          ),
+          CircleAvatar(backgroundImage: AssetImage('images/avatar.JPG')),
           SizedBox(
             width: 20,
           ),
