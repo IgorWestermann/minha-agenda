@@ -9,8 +9,8 @@ class MyInputField extends StatelessWidget {
   final Widget? widget;
   const MyInputField(
       {Key? key,
-      required this.hint,
       required this.title,
+      required this.hint,
       this.controller,
       this.widget})
       : super(key: key);

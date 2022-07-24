@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:minha_agenda/ui/theme.dart';
+import 'package:minha_agenda/ui/widgets/button.dart';
 import 'package:minha_agenda/ui/widgets/input_field.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -12,16 +13,27 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   String _endTime = "09:30 PM";
   String _startTime = DateFormat('hh:mm a').format(DateTime.now()).toString();
-
+  int _selectedRemind = 5;
+  List<int> remindList = [5, 10, 15, 20];
+  String _selectedRepeat = 'Não repetir';
+  List<String> repeatList = [
+    'Não repetir',
+    'Diariamente',
+    'Semanalmente',
+    'Mensalmente',
+  ];
+  int _selectedColor = 1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _appBar(context),
       body: Container(
-        padding: const EdgeInsets.only(left: 20, right: 20),
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,8 +42,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 'Nova tarefa',
                 style: headingStyle,
               ),
-              MyInputField(hint: 'Digite seu titulo', title: 'Titulo'),
-              MyInputField(hint: 'Digite sua anotação', title: 'Anotação'),
+              MyInputField(
+                hint: 'Digite seu titulo',
+                title: 'Titulo',
+                controller: _titleController,
+              ),
+              MyInputField(
+                hint: 'Digite sua anotação',
+                title: 'Anotação',
+                controller: _noteController,
+              ),
               MyInputField(
                 hint: DateFormat.yMd('pt_BR').format(_selectedDate),
                 title: 'Data',
@@ -56,12 +76,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         onPressed: () {
                           _getTimeFromUser(isStartTime: true);
                         },
-                        icon: Icon(Icons.access_time_rounded),
+                        icon: const Icon(Icons.access_time_rounded),
                         color: Colors.grey,
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 12,
                   ),
                   Expanded(
@@ -72,10 +92,87 @@ class _AddTaskPageState extends State<AddTaskPage> {
                         onPressed: () {
                           _getTimeFromUser(isStartTime: false);
                         },
-                        icon: Icon(Icons.access_time_rounded),
+                        icon: const Icon(Icons.access_time_rounded),
                         color: Colors.grey,
                       ),
                     ),
+                  ),
+                ],
+              ),
+              MyInputField(
+                hint: '$_selectedRemind minutos antes',
+                title: 'Me lembre em ',
+                widget: DropdownButton(
+                  icon: const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.grey,
+                  ),
+                  iconSize: 32,
+                  elevation: 4,
+                  style: subTitleStyle,
+                  underline: Container(
+                    height: 0,
+                  ),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedRemind = int.parse(newValue!);
+                    });
+                  },
+                  items: remindList.map<DropdownMenuItem<String>>(
+                    (int value) {
+                      return DropdownMenuItem<String>(
+                        value: value.toString(),
+                        child: Text(
+                          value.toString(),
+                        ),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+              MyInputField(
+                hint: '$_selectedRepeat',
+                title: 'Repita',
+                widget: DropdownButton(
+                  icon: const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.grey,
+                  ),
+                  iconSize: 32,
+                  elevation: 4,
+                  style: subTitleStyle,
+                  underline: Container(
+                    height: 0,
+                  ),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedRepeat = newValue!;
+                    });
+                  },
+                  items: repeatList.map<DropdownMenuItem<String>>(
+                    (String? value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value!,
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+              const SizedBox(
+                height: 18,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _colorPallete(),
+                  MyButton(
+                    label: 'Criar Tarefa',
+                    onTap: () => _validadeData(),
                   ),
                 ],
               ),
@@ -83,6 +180,65 @@ class _AddTaskPageState extends State<AddTaskPage> {
           ),
         ),
       ),
+    );
+  }
+
+  _validadeData() {
+    if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+      // add data to databased
+      Get.back();
+    } else if (_titleController.text.isNotEmpty ||
+        _noteController.text.isNotEmpty) {
+      Get.snackbar(
+        'Required',
+        'All fields are required',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.white,
+        colorText: Colors.red,
+        icon: Icon(Icons.warning_amber_outlined, color: Colors.red),
+      );
+    }
+  }
+
+  _colorPallete() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Cor', style: titleStyle),
+        const SizedBox(
+          height: 8.0,
+        ),
+        Wrap(
+          children: List<Widget>.generate(
+            3,
+            (int index) => GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedColor = index;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: CircleAvatar(
+                  radius: 14,
+                  backgroundColor: index == 0
+                      ? blueClr
+                      : index == 1
+                          ? pinkClr
+                          : yellowClr,
+                  child: _selectedColor == index
+                      ? Icon(
+                          Icons.done,
+                          color: Colors.white,
+                          size: 16,
+                        )
+                      : Container(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

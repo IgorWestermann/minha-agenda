@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 
 const Color blueClr = Color(0xFF4e5ae8);
+const Color yellowClr = Color(0xFFFFB746);
+const Color pinkClr = Color(0xFFff4667);
 const primaryClr = blueClr;
 
 class Themes {
