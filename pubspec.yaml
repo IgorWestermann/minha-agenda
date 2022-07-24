@@ -40,7 +40,10 @@ dependencies:
   flutter_native_timezone:
   intl:
   google_fonts:
-  date_picker_timeline: 
+  date_picker_timeline:
+
+  flutter_localizations:
+    sdk: flutter 
 
 dev_dependencies:
   flutter_test:

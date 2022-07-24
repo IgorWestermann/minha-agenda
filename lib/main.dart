@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:minha_agenda/services/theme_services.dart';
 import 'package:minha_agenda/ui/home_page.dart';
 import 'package:minha_agenda/ui/theme.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('pt', 'BR')],
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: Themes.light,
