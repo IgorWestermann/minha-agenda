@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:minha_agenda/ui/theme.dart';
+import 'package:minha_agenda/view/theme.dart';
 
 class MyInputField extends StatelessWidget {
   final String title;

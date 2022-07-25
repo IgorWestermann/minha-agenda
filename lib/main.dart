@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:minha_agenda/db/db_helper.dart';
 import 'package:minha_agenda/services/theme_services.dart';
-import 'package:minha_agenda/ui/home_page.dart';
-import 'package:minha_agenda/ui/theme.dart';
+import 'package:minha_agenda/view/home_page.dart';
+import 'package:minha_agenda/view/theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await DBHelper.initDb();
   await GetStorage.init();
   runApp(const MyApp());
 }

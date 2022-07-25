@@ -5,9 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:minha_agenda/services/theme_services.dart';
-import 'package:minha_agenda/ui/add_task_bar.dart';
-import 'package:minha_agenda/ui/theme.dart';
-import 'package:minha_agenda/ui/widgets/button.dart';
+import 'package:minha_agenda/view/add_task_bar.dart';
+import 'package:minha_agenda/view/theme.dart';
+import 'package:minha_agenda/view/widgets/button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

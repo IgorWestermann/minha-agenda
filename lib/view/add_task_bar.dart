@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:minha_agenda/ui/theme.dart';
-import 'package:minha_agenda/ui/widgets/button.dart';
-import 'package:minha_agenda/ui/widgets/input_field.dart';
+import 'package:minha_agenda/controller/task_controller.dart';
+import 'package:minha_agenda/model/task.dart';
+import 'package:minha_agenda/view/theme.dart';
+import 'package:minha_agenda/view/widgets/button.dart';
+import 'package:minha_agenda/view/widgets/input_field.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({Key? key}) : super(key: key);
@@ -13,6 +15,7 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
+  final TaskController _taskController = Get.put(TaskController());
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
@@ -185,7 +188,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   _validadeData() {
     if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
-      // add data to databased
+      _addDataToDb();
       Get.back();
     } else if (_titleController.text.isNotEmpty ||
         _noteController.text.isNotEmpty) {
@@ -198,6 +201,23 @@ class _AddTaskPageState extends State<AddTaskPage> {
         icon: Icon(Icons.warning_amber_outlined, color: Colors.red),
       );
     }
+  }
+
+  _addDataToDb() async {
+    int value = await _taskController.addTask(
+      Task(
+        note: _noteController.text,
+        title: _titleController.text,
+        date: DateFormat.yMd().format(_selectedDate),
+        startTime: _startTime,
+        endTime: _endTime,
+        remind: _selectedRemind,
+        repeat: _selectedRepeat,
+        color: _selectedColor,
+        isCompleted: 0,
+      ),
+    );
+    print('My id is ' + '$value');
   }
 
   _colorPallete() {
